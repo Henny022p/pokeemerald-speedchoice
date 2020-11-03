@@ -1,6 +1,7 @@
 Route117_EventScript_291C18:: @ 8291C18
 	lock
 	faceplayer
+	goto_if_unset FLAG_DITTO_EGG_RECIVED, Route177_EventScript_DittoEgg
 	special GetDaycareMonNicknames
 	specialvar VAR_RESULT, GetDaycareState
 	compare VAR_RESULT, 1
@@ -10,6 +11,31 @@ Route117_EventScript_291C18:: @ 8291C18
 	compare VAR_RESULT, 3
 	goto_if_eq Route117_EventScript_291CE8
 	msgbox Route117_Text_291FCF, MSGBOX_DEFAULT
+	release
+	end
+
+Route177_EventScript_DittoEgg::
+	msgbox Route117_Text_WantDittoEgg, MSGBOX_YESNO
+	compare VAR_RESULT, YES
+	goto_if_eq Route117_EventScript_DittoEggAccept
+	release
+	end
+
+Route117_EventScript_DittoEggAccept::
+	getpartysize
+	compare VAR_RESULT, 6
+	goto_if_eq Route117_EventScript_DittoEggFull
+	giveegg SPECIES_DITTO
+	playfanfare MUS_FANFA1
+	msgbox Route117_Text_DittoEggRecieved, MSGBOX_DEFAULT
+	waitfanfare
+	waitbuttonpress
+	setflag FLAG_DITTO_EGG_RECIVED
+	release
+	end
+
+Route117_EventScript_DittoEggFull::
+	msgbox Route117_Text_29216A, MSGBOX_DEFAULT
 	release
 	end
 
@@ -437,3 +463,10 @@ Route117_PokemonDayCare_Text_29266D: @ 829266D
 	.string "me, you'll be left with just one.\p"
 	.string "You will be better off if you catch\n"
 	.string "some more, I dare say.$"
+
+Route117_Text_WantDittoEgg:
+	.string "I have a Ditto egg for you.\n"
+	.string "Do you want it?$"
+
+Route117_Text_DittoEggRecieved:
+	.string "{PLAYER} received the egg!$"
